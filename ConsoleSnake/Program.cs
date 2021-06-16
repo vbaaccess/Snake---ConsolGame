@@ -70,7 +70,7 @@ namespace ConsoleSnake
                     if (snake.GameOver)
                     {
                         Console.Clear();
-                        Console.WriteLine($"GAME OVER\nYOUR SCORE: {0}",snake.Length);
+                        Console.WriteLine($"GAME OVER\nYOUR SCORE: " + snake.Length);
                         bTheEnd = true;
                         Console.ReadLine();
                     }
@@ -82,5 +82,6 @@ namespace ConsoleSnake
 
             Console.WriteLine("Hello World!");
         }
+
     }
 }
