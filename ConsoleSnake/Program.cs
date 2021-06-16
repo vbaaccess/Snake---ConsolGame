@@ -23,17 +23,28 @@ namespace ConsoleSnake
 
             while (!bExitGame)
             {
-                
-                
+
+
 
                 //ustawienia okna konsoli:
+                Console.CursorVisible = false;          // wylaczenie migajacego kursora
                 GameConsolWindow.Size(gameBoardSize     // - ustawienia rozmiaru
                                 , gameBoardSize);
                 GameConsolWindow.Center();              // - wysrodkowanie okna
-                
+
+                // wstepne menu gry (nazie bez opcji)
+                string s;
+                Console.Clear();                
+                Console.Title = "CONSOL GAME - SNAKE 2021 (c)";
+                s = "CONSOL GAME SNAKE";
+                Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2) , 1);
+                Console.Write(s);
+
+                s = "PRES KEY TO START GAME!";
+                Console.SetCursorPosition((int)gameBoardSize/2 - ((int)(s.Length) / 2), gameBoardSize / 2);
+                Console.Write(s);
+                Console.ReadLine();                
                 Console.Clear();
-                Console.Title = "SNAKE";
-                Console.CursorVisible = false;          // wylaczenie migajacego kursora
 
                 bExitGame = true;                       // TO DO - docelow wyjscie z petli gry i zamkniecie konsoli
 
@@ -89,12 +100,16 @@ namespace ConsoleSnake
 
                         if (snake.GameOver)
                         {
-                            Console.Clear();
+                            //Console.Clear();
                             Console.ResetColor();
-                            Console.SetCursorPosition(1, 1);
-                            Console.WriteLine($"GAME OVER");
-                            Console.SetCursorPosition(1, 2);
-                            Console.WriteLine($"YOUR SCORE: " + snake.Length);
+                            s = $"GAME OVER";
+                            Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), (gameBoardSize / 2) - 1);
+                            Console.WriteLine(s);
+
+                            s = $"YOUR SCORE: " + snake.Length;
+                            Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), (gameBoardSize / 2) + 1);
+                            Console.WriteLine(s);
+
                             bEndOfTheGame = true;
                             Console.ReadLine();
                         }
