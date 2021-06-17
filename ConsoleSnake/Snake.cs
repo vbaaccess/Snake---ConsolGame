@@ -22,7 +22,7 @@ namespace ConsoleSnake
 
         public int Length { get; set; } = 3;                                // poczatkowa dlugosc
         public Direction Direction { get; set; } = Direction.Right;         // poczatkowy kierunek glowy
-        public Coordinate HeadPosition { get; set; } = new Coordinate();    // poczatkowy punkt startowy glowy
+        public Coordinate HeadPosition { get; set; } = new Coordinate(9,9); // poczatkowy punkt startowy glowy
         List<Coordinate> Tail { get; set; } = new List<Coordinate>();
 
         private bool outOfRange = false;        

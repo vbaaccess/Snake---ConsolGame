@@ -9,7 +9,7 @@ namespace ConsoleSnake
         {
             bool bExitGame = false;                 // wyjscie z gry (zakonczenie dzialania aplikacji)
             bool bEndOfTheGame = false;             // zakonczenie rozgrywki
-            int gameBoardSize = 50;                 // ustawienia rozmiaru obszaru gry
+            int gameBoardSize = 54;                 // ustawienia rozmiaru obszaru gry
             double predkosc = 5.0;                  // liczba klatek na sekunde
             double przyspieszenie = 1.1;            // jak bardzo snak przyspiesza co znjedzenie
             double frameRate = 1000 / predkosc;     // czestotliwość ramki; czyli liczba milisekund co ile bedzie 'wyswietlana' klatka graficzna
@@ -48,7 +48,8 @@ namespace ConsoleSnake
 
                 bExitGame = true;                       // TO DO - docelow wyjscie z petli gry i zamkniecie konsoli
 
-                board = new Board();                    // obiek planszy
+                board = new Board(gameBoardSize     
+                                , gameBoardSize);       // obiek planszy
                 meal = new Meal();                      // obiek jedzenia
                 snake = new Snake();                    // obiek snake
 
