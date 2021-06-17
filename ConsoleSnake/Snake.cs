@@ -15,11 +15,12 @@ namespace ConsoleSnake
 
     public class Snake : ISnake
     {
-        private readonly string SnakeHead = "@";                            //symbol glowy sneka
-        private readonly string SnakeBody = "#";                            //symbol ciala sneka
-        private readonly ConsoleColor SnakeColor = ConsoleColor.Green;      //kolor  sneka
+        private readonly string SnakeHead = "@";                                //symbol glowy sneka
+        private readonly string SnakeBody = "#";                                //symbol ciala sneka
+        private readonly ConsoleColor SnakeBodyColor = ConsoleColor.Green;      //kolor ciala sneka
+        private readonly ConsoleColor SnakeHeadColor = ConsoleColor.DarkGreen;  //kolor glowy sneka
 
-        public int Length { get; set; } = 1;                                // poczatkowa dlugosc
+        public int Length { get; set; } = 3;                                // poczatkowa dlugosc
         public Direction Direction { get; set; } = Direction.Right;         // poczatkowy kierunek glowy
         public Coordinate HeadPosition { get; set; } = new Coordinate();    // poczatkowy punkt startowy glowy
         List<Coordinate> Tail { get; set; } = new List<Coordinate>();
@@ -49,7 +50,11 @@ namespace ConsoleSnake
             // TO DO - do zrobienie przypadke gdy glowa jest poza zakresem planszy
         }
 
-        public void EatMeal() { Length++; }
+        public void EatMeal()
+        {
+            Length++;
+            Console.Beep(); // dzwiek zjedzenia
+        }
 
         public void Move()
         {
@@ -80,8 +85,16 @@ namespace ConsoleSnake
             {
                 //rysowanie nowej pozycji glowy
                 Console.SetCursorPosition(HeadPosition.x, HeadPosition.y);
-                Console.ForegroundColor = SnakeColor;
-                Console.Write(SnakeBody);
+                Console.ForegroundColor = SnakeHeadColor;
+                Console.Write(SnakeHead);
+
+                //rysowanie ogona na poprzedniej pozycji glowy
+                if (Tail.Count>1)
+                {
+                    Console.SetCursorPosition(Tail[Tail.Count-1].x, Tail[Tail.Count-1].y);
+                    Console.ForegroundColor = SnakeBodyColor;
+                    Console.Write(SnakeBody);
+                }
 
                 //zbieramy koordynaty po ktorych przeslismy
                 Tail.Add(new Coordinate(HeadPosition.x, HeadPosition.y));

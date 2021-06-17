@@ -20,7 +20,7 @@ namespace ConsoleSnake
 
             Meal meal;                              // obiek jedzenia
             Snake snake;                            // obiek snake
-
+            Board board;                            // obiekt planszy
             while (!bExitGame)
             {
 
@@ -48,6 +48,7 @@ namespace ConsoleSnake
 
                 bExitGame = true;                       // TO DO - docelow wyjscie z petli gry i zamkniecie konsoli
 
+                board = new Board();                    // obiek planszy
                 meal = new Meal();                      // obiek jedzenia
                 snake = new Snake();                    // obiek snake
 
