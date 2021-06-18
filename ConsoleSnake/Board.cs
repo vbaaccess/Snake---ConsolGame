@@ -11,7 +11,8 @@ namespace ConsoleSnake
         private readonly ConsoleColor WallColor = ConsoleColor.DarkCyan;      // kolor  scian
 
         private Coordinate _CheckedCoordinates;
-
+        private int startLenght = 0;
+        private int ?ScoreToDisplay = null;
         public int _boardSize_X { get; private set; }
         public int _boardSize_y { get; private set; }
 
@@ -38,6 +39,9 @@ namespace ConsoleSnake
             // gdy utworzymy obiekt klasy to ma sie wygenerowac obrys planszy
             int x;
             int y;
+
+            PrintBootomInformation();
+            PrintTopInformation();
 
             Console.ForegroundColor = WallColor;
 
@@ -89,7 +93,14 @@ namespace ConsoleSnake
             BoardWall.Add(new Coordinate(x, y));
         }
 
-        //public void PrintBootomInformation(Coordinate CheckedCoordinates, bool bColision = false)
+        public void LenghtToCheck(int NewLenght)
+        {
+            if (ScoreToDisplay == null)
+                startLenght = NewLenght-1;
+
+            ScoreToDisplay = NewLenght - startLenght;
+        }
+
         public void CoordinateToCheck(Coordinate CheckedCoordinates)
         {
             //zapisz koordynaty do sprawdzenia
@@ -126,28 +137,32 @@ namespace ConsoleSnake
 
         public void PrintBootomInformation()
         {
-            int TextIndex = _boardSize_y - 1;
 
-            ClearLine(TextIndex);
+            if (_CheckedCoordinates != null)
+            {
+                int TextIndex = _boardSize_y - 1;
 
-            Console.SetCursorPosition(4, TextIndex);
-            Console.Write($"x: " + _CheckedCoordinates.x);
+                ClearLine(TextIndex);
 
-            Console.SetCursorPosition(10, TextIndex);
-            Console.Write($"y: " + _CheckedCoordinates.y);
+                Console.SetCursorPosition(4, TextIndex);
+                Console.Write($"x: " + _CheckedCoordinates.x);
 
-            //Console.SetCursorPosition(20, _boardSize_y - 1);
-            //Console.Write($"y: " + CheckedCoordinates.y);
+                Console.SetCursorPosition(10, TextIndex);
+                Console.Write($"y: " + _CheckedCoordinates.y);
+            }
 
-            //return CoordinatesCompatible;
         }
 
-        public void PrintTopInformation(int score)
+        public void PrintTopInformation()
         {
             int TextIndex = 0;
 
             ClearLine(TextIndex);
-            string s = $"Score: " + score;
+            string s = $"Score: ";
+            if (ScoreToDisplay == null)
+                s += "-";
+            else
+                s += ScoreToDisplay;
             Console.SetCursorPosition(CenterTextStartTextPosition(s), TextIndex);
             Console.Write(s);
         }

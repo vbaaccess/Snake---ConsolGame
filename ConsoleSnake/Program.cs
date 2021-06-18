@@ -18,9 +18,10 @@ namespace ConsoleSnake
             DateTime lastDate = DateTime.Now;       // domyslnei zainicjowany czas to moment startu gry
             double frameMilliseconds;               // pomocniczy licznik czasu [ilosc milisekund]
 
-            Meal meal;                              // obiek jedzenia
-            Snake snake;                            // obiek snake
             Board board;                            // obiekt planszy
+            Snake snake;                            // obiek snake
+            Meal meal;                              // obiek jedzenia
+            
             while (!bExitGame)
             {
 
@@ -50,10 +51,8 @@ namespace ConsoleSnake
 
                 board = new Board(gameBoardSize     
                                 , gameBoardSize);       // obiek planszy
-                meal = new Meal();                      // obiek jedzenia
                 snake = new Snake();                    // obiek snake
-
-                //snake.RegisterWithEventBeforMove(board.PrintBootomInformation);
+                meal = new Meal();                      // obiek jedzenia
 
                 //--------------------------------------------------------------------------
                 //po wykonanu ruchu (wykonaniu metody move obiektu klasy Snake) 
@@ -61,7 +60,12 @@ namespace ConsoleSnake
                 //przekazana metoda ma za zadanie:
                 // - zapamietac koordynaty (np. na potrzey wyswietlenia ich na planszy)
                 // - sprawdzic czy nie nastepuje kolizja ze sciana planzsy
-                snake.RegisterWithEventAfterMove(board.CoordinateToCheck);
+                snake.RegisterWithEventAfterNewCoordinate(board.CoordinateToCheck);
+                snake.RegisterWithEventAfterNewLength(board.LenghtToCheck);
+
+                snake.RegisterWithEventAfterMove(board.PrintBootomInformation);
+                snake.RegisterWithEventAfterEatMeal(board.PrintTopInformation);
+
                 board.RegisterWithEventAfterCollision(snake.HeadColision);
                 //--------------------------------------------------------------------------
 
@@ -122,8 +126,8 @@ namespace ConsoleSnake
                             bEndOfTheGame = true;
                         } else
                         {
-                            board.PrintBootomInformation();
-                            board.PrintTopInformation(snake.Length);
+                            //board.PrintBootomInformation();
+                            //board.PrintTopInformation(snake.Length);
                         }
 
 

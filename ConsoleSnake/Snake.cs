@@ -20,7 +20,7 @@ namespace ConsoleSnake
         private readonly ConsoleColor SnakeBodyColor = ConsoleColor.Green;      //kolor ciala sneka
         private ConsoleColor SnakeHeadColor = ConsoleColor.DarkGreen;           //kolor glowy sneka
 
-        public int Length { get; set; } = 3;                                // poczatkowa dlugosc
+        public int Length { get; private set; } = 3;                                // poczatkowa dlugosc
         public Direction Direction { get; set; } = Direction.Left;          // kierunek glowy
         public Coordinate HeadPosition { get; set; } = new Coordinate(9,9); // pozycja glowy
         List<Coordinate> Tail { get; set; } = new List<Coordinate>();
@@ -32,7 +32,8 @@ namespace ConsoleSnake
         {
             HeadPosition = new Coordinate(9,9);     // poczatkowy punkt startowy glowy
             Direction = Direction.Right;            // poczatkowy kierunek glowy
-            RiseEventBeforMove();
+            //RiseEventBeforMove();
+            //RiseEventAfterNewCoordinate();
         }
 
         public bool GameOver
@@ -65,6 +66,8 @@ namespace ConsoleSnake
         {
             Length++;
             Console.Beep(); // dzwiek zjedzenia
+            RiseEventAfterNewLength();
+            RiseEventAfterEatMeal();
         }
 
         public void Move()
@@ -94,9 +97,10 @@ namespace ConsoleSnake
             }
 
 
-
+            
             HeadPosition.x = NewX;
             HeadPosition.y = NewY;
+            RiseEventAfterNewCoordinate();
 
             RiseEventAfterMove();  // Zaraz po ruchu (przed rysowaniem) przekazujemy infor o nowych koordynatach
             //TO DO - delegata AfterMove: czyli ruch nastapil
@@ -161,23 +165,43 @@ namespace ConsoleSnake
 
 
         // --------------------------------------------------------- --- DELEGATY --- --------------------------------------------------------- ---
-        /* --- 2 --- */
-        public delegate void EventBeforMove(Coordinate HeadPosition);
+        /* --- 1 --- */
+        public delegate void EventBeforMove();
         private EventBeforMove listOfHandlersBeforMove;
 
         public void RegisterWithEventBeforMove(EventBeforMove methodToCall) => listOfHandlersBeforMove += methodToCall;
-        private void RiseEventBeforMove() => listOfHandlersBeforMove?.Invoke(this.HeadPosition);
+        private void RiseEventBeforMove() => listOfHandlersBeforMove?.Invoke();
 
-        /* --- 1 --- */
+        /* --- 2 --- */
+        public delegate void EventAfterNewCoordinate(Coordinate HeadPosition);
+        private EventAfterNewCoordinate listOfHandlersAfterNewCoordinate;
 
-        public delegate void EventAfterMove(Coordinate HeadPosition);
+        public void RegisterWithEventAfterNewCoordinate(EventAfterNewCoordinate methodToCall) => listOfHandlersAfterNewCoordinate += methodToCall;
+        private void RiseEventAfterNewCoordinate() => listOfHandlersAfterNewCoordinate?.Invoke(this.HeadPosition);
+
+        /* --- 3 --- */
+        public delegate void EventAfterMove();
         private EventAfterMove listOfHandlersAfterMove;
 
         public void RegisterWithEventAfterMove(EventAfterMove methodToCall) => listOfHandlersAfterMove += methodToCall;
         private void RiseEventAfterMove()
         {
-            listOfHandlersAfterMove?.Invoke(this.HeadPosition);
-        } 
+            listOfHandlersAfterMove?.Invoke();
+        }
+
+        /* --- 4 --- */
+        public delegate void EventAfterEatMeal();
+        private EventAfterEatMeal listOfHandlersAfterEatMeal;
+
+        public void RegisterWithEventAfterEatMeal(EventAfterEatMeal methodToCall) => listOfHandlersAfterEatMeal += methodToCall;
+        private void RiseEventAfterEatMeal() => listOfHandlersAfterEatMeal?.Invoke();
+        
+        /* --- 5 --- */
+        public delegate void EventAfterNewLength(int Length);
+        private EventAfterNewLength listOfHandlersAfterNewLength;
+
+        public void RegisterWithEventAfterNewLength(EventAfterNewLength methodToCall) => listOfHandlersAfterNewLength += methodToCall;
+        private void RiseEventAfterNewLength() => listOfHandlersAfterNewLength?.Invoke(this.Length);
         // --------------------------------------------------------- ----------------- --- ---------------------------------------------------------
 
     }
