@@ -53,6 +53,18 @@ namespace ConsoleSnake
                 meal = new Meal();                      // obiek jedzenia
                 snake = new Snake();                    // obiek snake
 
+                //snake.RegisterWithEventBeforMove(board.PrintBootomInformation);
+
+                //--------------------------------------------------------------------------
+                //po wykonanu ruchu (wykonaniu metody move obiektu klasy Snake) 
+                //klas bedzie wywolywala metode klasy Board (oddelegowana)
+                //przekazana metoda ma za zadanie:
+                // - zapamietac koordynaty (np. na potrzey wyswietlenia ich na planszy)
+                // - sprawdzic czy nie nastepuje kolizja ze sciana planzsy
+                snake.RegisterWithEventAfterMove(board.CoordinateToCheck);
+                board.RegisterWithEventAfterCollision(snake.HeadColision);
+                //--------------------------------------------------------------------------
+
                 // game loop - glwona petla rozgrywki
                 while (!bEndOfTheGame)
                 {
@@ -115,6 +127,8 @@ namespace ConsoleSnake
                             bEndOfTheGame = true;
                             Console.ReadLine();
                         }
+
+                        board.PrintBootomInformation();
 
                         lastDate = DateTime.Now;
                     }

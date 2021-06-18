@@ -18,14 +18,20 @@ namespace ConsoleSnake
         private readonly string SnakeHead = "@";                                //symbol glowy sneka
         private readonly string SnakeBody = "#";                                //symbol ciala sneka
         private readonly ConsoleColor SnakeBodyColor = ConsoleColor.Green;      //kolor ciala sneka
-        private readonly ConsoleColor SnakeHeadColor = ConsoleColor.DarkGreen;  //kolor glowy sneka
+        private ConsoleColor SnakeHeadColor = ConsoleColor.DarkGreen;           //kolor glowy sneka
 
         public int Length { get; set; } = 3;                                // poczatkowa dlugosc
-        public Direction Direction { get; set; } = Direction.Right;         // poczatkowy kierunek glowy
+        public Direction Direction { get; set; } = Direction.Left;         // poczatkowy kierunek glowy
         public Coordinate HeadPosition { get; set; } = new Coordinate(9,9); // poczatkowy punkt startowy glowy
         List<Coordinate> Tail { get; set; } = new List<Coordinate>();
 
-        private bool outOfRange = false;        
+        private bool hisAlive = true;
+        private bool outOfRange = false;
+
+        public Snake()
+        {
+            RiseEventBeforMove();
+        }
 
         public bool GameOver
         {
@@ -34,20 +40,23 @@ namespace ConsoleSnake
 
             get
             {
-                return
-                   (Tail                                    // sprawdzamy Liste zawierajacych koordynaty ( =>c)
-                        .Where(                             // sprawdzamy wykorzystujac System.Linq.Where
+                bool colisionWithTail = false;
+
+                if (
+                    Tail.Where(                             // sprawdzamy wykorzystujac System.Linq.Where
                                 c =>                        // gdzie kordynaty (c =>)
                                   c.x == HeadPosition.x     // pokrywaj sie w pozyji X z glowa
                                && c.y == HeadPosition.y     // oraz pokrywaj sie w pozyji Y z glowa
                               ).ToList()                    // sprawdzamy dla wszystkich elementow Listy koordynatow ogona
-                                        .Count > 1)         // sprawdzamy czy kolizja nastapila w na conajmniej jednym odcinku ogona
-                              ||                            // lub
-                              outOfRange                    // gdy waz wyjedzie poza ekran
-                              ;
+                                        .Count > 1          // sprawdzamy czy kolizja nastapila w na conajmniej jednym odcinku ogona
+                   )
+                    colisionWithTail = true;
+                                                            // Mozliwosci skonczenia gry:
+                return (   colisionWithTail                 // - kolizaja z ogonem
+                        || outOfRange                       // - wyjechanie poza ekran
+                        || hisAlive ==false                 // - kolizja ze sciana (i nie zyje)
+                              );
             } 
-
-            // TO DO - do zrobienie przypadke gdy glowa jest poza zakresem planszy
         }
 
         public void EatMeal()
@@ -58,24 +67,55 @@ namespace ConsoleSnake
 
         public void Move()
         {
+            int NewX= HeadPosition.x;
+            int NewY= HeadPosition.y;
+
+            //Okreslenie nowej pozycji glowy
             switch (Direction)
             {
                 case Direction.Left:
-                    HeadPosition.x--;
+                    NewX--;
+                    //HeadPosition.x--;
                     break;
                 case Direction.Right:
-                    HeadPosition.x++;
+                    NewX++;
+                    //HeadPosition.x++;
                     break;
                 case Direction.Up:
-                    HeadPosition.y--;
+                    NewY--;
+                    //HeadPosition.y--;
                     break;
                 case Direction.Down:
-                    HeadPosition.y++;
+                    NewY++;
+                    //HeadPosition.y++;
                     break;
             }
 
-            Draw(); //wyswietlenie
+
+
+            HeadPosition.x = NewX;
+            HeadPosition.y = NewY;
+
+            RiseEventAfterMove();  // Zaraz po ruchu (przed rysowaniem) przekazujemy infor o nowych koordynatach
+            //TO DO - delegata AfterMove: czyli ruch nastapil
+            //TO DO - tutaj delegata ktora pozwoli okreslic czy nie ma kolizji ze sciana
+            //      - delegata powinna umozliwic zwrocic informacje: o kolizji
+
+            Draw(); //Rysowanie glowy
+
+            RiseEventBeforMove(); // zaraz po narysowaniu
+            //przypisanie nowej pozycji glowy
+            //TO DO - delegata BeforMove: czyli ruch nastapi i wiem z jakiego miejsca na jakie
+            //      - delegata powinna umozliwic zwrocic informacje o innej nowej pozycji; np.:
+            //                                            -1- w Pac-Man przy przejsciu z lewej strony na prawa (przez tunel)
+
         }
+
+        public void HeadColision()
+        {
+            SnakeHeadColor = ConsoleColor.Red;
+            hisAlive = false;   
+        }            
 
         //Rysowanie calego snake 
         void Draw()
@@ -83,16 +123,17 @@ namespace ConsoleSnake
             //TO DO - zamiast try/catch zrobic sprawdzenie bufora ekranu: czye head position nie wykracza poza ekran
             try
             {
+
                 //rysowanie nowej pozycji glowy
-                Console.SetCursorPosition(HeadPosition.x, HeadPosition.y);
                 Console.ForegroundColor = SnakeHeadColor;
+                Console.SetCursorPosition(HeadPosition.x, HeadPosition.y);                
                 Console.Write(SnakeHead);
 
                 //rysowanie ogona na poprzedniej pozycji glowy
                 if (Tail.Count>1)
                 {
-                    Console.SetCursorPosition(Tail[Tail.Count-1].x, Tail[Tail.Count-1].y);
                     Console.ForegroundColor = SnakeBodyColor;
+                    Console.SetCursorPosition(Tail[Tail.Count-1].x, Tail[Tail.Count-1].y);                    
                     Console.Write(SnakeBody);
                 }
 
@@ -113,5 +154,29 @@ namespace ConsoleSnake
                 outOfRange = true;
             }
         }
+
+
+
+
+        // --------------------------------------------------------- --- DELEGATY --- --------------------------------------------------------- ---
+        /* --- 2 --- */
+        public delegate void EventBeforMove(Coordinate HeadPosition);
+        private EventBeforMove listOfHandlersBeforMove;
+
+        public void RegisterWithEventBeforMove(EventBeforMove methodToCall) => listOfHandlersBeforMove += methodToCall;
+        private void RiseEventBeforMove() => listOfHandlersBeforMove?.Invoke(this.HeadPosition);
+
+        /* --- 1 --- */
+
+        public delegate void EventAfterMove(Coordinate HeadPosition);
+        private EventAfterMove listOfHandlersAfterMove;
+
+        public void RegisterWithEventAfterMove(EventAfterMove methodToCall) => listOfHandlersAfterMove += methodToCall;
+        private void RiseEventAfterMove()
+        {
+            listOfHandlersAfterMove?.Invoke(this.HeadPosition);
+        } 
+        // --------------------------------------------------------- ----------------- --- ---------------------------------------------------------
+
     }
 }
