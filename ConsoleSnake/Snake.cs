@@ -21,8 +21,8 @@ namespace ConsoleSnake
         private ConsoleColor SnakeHeadColor = ConsoleColor.DarkGreen;           //kolor glowy sneka
 
         public int Length { get; set; } = 3;                                // poczatkowa dlugosc
-        public Direction Direction { get; set; } = Direction.Left;         // poczatkowy kierunek glowy
-        public Coordinate HeadPosition { get; set; } = new Coordinate(9,9); // poczatkowy punkt startowy glowy
+        public Direction Direction { get; set; } = Direction.Left;          // kierunek glowy
+        public Coordinate HeadPosition { get; set; } = new Coordinate(9,9); // pozycja glowy
         List<Coordinate> Tail { get; set; } = new List<Coordinate>();
 
         private bool hisAlive = true;
@@ -30,6 +30,8 @@ namespace ConsoleSnake
 
         public Snake()
         {
+            HeadPosition = new Coordinate(9,9);     // poczatkowy punkt startowy glowy
+            Direction = Direction.Right;            // poczatkowy kierunek glowy
             RiseEventBeforMove();
         }
 

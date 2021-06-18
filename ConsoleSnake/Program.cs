@@ -80,16 +80,20 @@ namespace ConsoleSnake
                                 bEndOfTheGame = true;
                                 break;
                             case ConsoleKey.LeftArrow:
-                                snake.Direction = Direction.Left;
+                                if (snake.Direction != Direction.Right)
+                                    snake.Direction = Direction.Left;
                                 break;
                             case ConsoleKey.RightArrow:
-                                snake.Direction = Direction.Right;
+                                if (snake.Direction != Direction.Left)
+                                    snake.Direction = Direction.Right;
                                 break;
                             case ConsoleKey.UpArrow:
-                                snake.Direction = Direction.Up;
+                                if (snake.Direction != Direction.Down)
+                                    snake.Direction = Direction.Up;
                                 break;
                             case ConsoleKey.DownArrow:
-                                snake.Direction = Direction.Down;
+                                if (snake.Direction != Direction.Up)
+                                    snake.Direction = Direction.Down;
                                 break;
                         }
                     }
@@ -114,26 +118,22 @@ namespace ConsoleSnake
 
                         if (snake.GameOver)
                         {
-                            //Console.Clear();
-                            Console.ResetColor();
-                            s = $"GAME OVER";
-                            Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), (gameBoardSize / 2) - 1);
-                            Console.WriteLine(s);
-
-                            s = $"YOUR SCORE: " + snake.Length;
-                            Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), (gameBoardSize / 2) + 1);
-                            Console.WriteLine(s);
-
+                            board.PrintGameOverDetail(snake.Length);
                             bEndOfTheGame = true;
-                            Console.ReadLine();
+                        } else
+                        {
+                            board.PrintBootomInformation();
+                            board.PrintTopInformation(snake.Length);
                         }
 
-                        board.PrintBootomInformation();
+
 
                         lastDate = DateTime.Now;
                     }
 
                 }
+
+                Console.ReadLine();
             }
         }
 

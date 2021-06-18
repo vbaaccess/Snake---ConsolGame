@@ -126,15 +126,14 @@ namespace ConsoleSnake
 
         public void PrintBootomInformation()
         {
-            int BootomTextIndex = _boardSize_y - 1;
+            int TextIndex = _boardSize_y - 1;
 
-            ClearLine(BootomTextIndex);
-            string s = $"Head Coordinates => x: {_CheckedCoordinates.x} , y: {_CheckedCoordinates.y}";
+            ClearLine(TextIndex);
 
-            Console.SetCursorPosition(4, BootomTextIndex);
+            Console.SetCursorPosition(4, TextIndex);
             Console.Write($"x: " + _CheckedCoordinates.x);
 
-            Console.SetCursorPosition(10, BootomTextIndex);
+            Console.SetCursorPosition(10, TextIndex);
             Console.Write($"y: " + _CheckedCoordinates.y);
 
             //Console.SetCursorPosition(20, _boardSize_y - 1);
@@ -143,7 +142,35 @@ namespace ConsoleSnake
             //return CoordinatesCompatible;
         }
 
-        //CheckCoordinateCompatibility
+        public void PrintTopInformation(int score)
+        {
+            int TextIndex = 0;
+
+            ClearLine(TextIndex);
+            string s = $"Score: " + score;
+            Console.SetCursorPosition(CenterTextStartTextPosition(s), TextIndex);
+            Console.Write(s);
+        }
+
+        public void PrintGameOverDetail(int score)
+        {
+
+            //Console.Clear();
+            Console.ResetColor();
+            string s = $"GAME OVER";
+            Console.SetCursorPosition(CenterTextStartTextPosition(s), (_boardSize_y / 2) - 1);
+            Console.WriteLine(s);
+
+            //s = $"YOUR SCORE: " + snake.Length;
+            s = $"YOUR SCORE: " + score;
+            Console.SetCursorPosition(CenterTextStartTextPosition(s), (_boardSize_y / 2) + 1);
+            Console.WriteLine(s);
+        }
+        
+        private int CenterTextStartTextPosition(string WerText)
+        {
+            return (int)_boardSize_X / 2 - ((int)(WerText.Length) / 2);
+        }
 
         //Wyczyszczenie linijki na konsoli
         private void ClearLine(int LineTextIndex)
