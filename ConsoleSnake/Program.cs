@@ -3,13 +3,38 @@
 namespace ConsoleSnake
 {
 
-    class Program
+    public static class Program
     {
         static void Main(string[] args)
         {
+            int gameBoardSize = 54;                 // ustawienia rozmiaru obszaru gry
+
+            TheBoard(gameBoardSize);
+            TheMenu();
+
+            
+
+            TheGame(gameBoardSize);
+        }
+
+        private static void TheBoard(int gameBoardSize)
+        {
+            // Init board object
+        }
+
+        private static void TheMenu()
+        {
+            // Init Game Menu object
+            throw new NotImplementedException();
+        }
+
+
+
+        static void TheGame(int gameBoardSize)
+        {
             bool bExitGame = false;                 // wyjscie z gry (zakonczenie dzialania aplikacji)
             bool bEndOfTheGame = false;             // zakonczenie rozgrywki
-            int gameBoardSize = 54;                 // ustawienia rozmiaru obszaru gry
+            
             double predkosc = 5.0;                  // liczba klatek na sekunde
             double przyspieszenie = 1.1;            // jak bardzo snak przyspiesza co znjedzenie
             double frameRate = 1000 / predkosc;     // czestotliwość ramki; czyli liczba milisekund co ile bedzie 'wyswietlana' klatka graficzna
@@ -21,11 +46,11 @@ namespace ConsoleSnake
             Board board;                            // obiekt planszy
             Snake snake;                            // obiek snake
             Meal meal;                              // obiek jedzenia
-            
+
             while (!bExitGame)
             {
 
-
+                
 
                 //ustawienia okna konsoli:
                 Console.CursorVisible = false;          // wylaczenie migajacego kursora
@@ -35,21 +60,21 @@ namespace ConsoleSnake
 
                 // wstepne menu gry (nazie bez opcji)
                 string s;
-                Console.Clear();                
+                Console.Clear();
                 Console.Title = "CONSOL GAME - SNAKE 2021 (c)";
                 s = "CONSOL GAME SNAKE";
-                Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2) , 1);
+                Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), 1);
                 Console.Write(s);
 
                 s = "PRES KEY TO START GAME!";
-                Console.SetCursorPosition((int)gameBoardSize/2 - ((int)(s.Length) / 2), gameBoardSize / 2);
+                Console.SetCursorPosition((int)gameBoardSize / 2 - ((int)(s.Length) / 2), gameBoardSize / 2);
                 Console.Write(s);
-                Console.ReadLine();                
+                Console.ReadLine();
                 Console.Clear();
 
                 bExitGame = true;                       // TO DO - docelow wyjscie z petli gry i zamkniecie konsoli
 
-                board = new Board(gameBoardSize     
+                board = new Board(gameBoardSize
                                 , gameBoardSize);       // obiek planszy
                 snake = new Snake();                    // obiek snake
                 meal = new Meal();                      // obiek jedzenia
@@ -124,7 +149,8 @@ namespace ConsoleSnake
                         {
                             board.PrintGameOverDetail(snake.Length);
                             bEndOfTheGame = true;
-                        } else
+                        }
+                        else
                         {
                             //board.PrintBootomInformation();
                             //board.PrintTopInformation(snake.Length);
@@ -140,7 +166,6 @@ namespace ConsoleSnake
                 Console.ReadLine();
             }
         }
-
     }
 
 
