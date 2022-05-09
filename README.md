@@ -21,3 +21,5 @@ https://www.youtube.com/watch?v=a64MEitlvQY
 
 ---
 2) **SoftDrinksAutomat**
+
+Simple menu consol app
